@@ -1,24 +1,67 @@
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Compilar y Correr Domótica",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}.exe"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        }
-    ]
-}
+# =============================================================================
+# UNIVERSIDAD VERACRUZANA - FACULTAD DE INGENIERÍA
+# PROGRAMA: Ingeniería en Instrumentación Electrónica
+# 
+# PROYECTO: Sistema de Procesamiento y Automatización
+# ETAPA: 2 - Avances de Integración Hardware-Software
+# 
+# AUTOR: Juan José Araujo Colorado
+# FECHA DE INICIO: 10 de marzo, 2026
+# FECHA DE ENTREGA: 17 de abril, 2026
+# VERSIÓN: 2.0.1 (Actualizada - Demostración de funcionamiento básico)
+# 
+# DESCRIPCIÓN:
+# Este script implementa la lógica principal para la lectura de señales de 
+# entrada, procesamiento de datos y control de periféricos. Se incluye el 
+# manejo de excepciones para asegurar la estabilidad del hardware conectado.
+# =============================================================================
+
+import time
+import random  # Simulación de lectura de hardware (Sustituir por librerías tipo RPi.GPIO o serial)
+
+class SistemaAutomatizado:
+    def __init__(self, nombre_sistema):
+        self.nombre = nombre_sistema
+        self.estado_actuador = False
+        print(f"--- Sistema '{self.nombre}' Inicializado ---")
+
+    def leer_sensor(self):
+        """Simula la entrada de un sensor analógico o digital."""
+        valor = round(random.uniform(20.0, 30.0), 2)
+        print(f"[INPUT] Lectura de sensor: {valor} unidades")
+        return valor
+
+    def procesar_logica(self, valor):
+        """Aplica la lógica de control según el umbral definido."""
+        UMBRAL = 25.0
+        if valor > UMBRAL:
+            self.controlar_actuador(True)
+        else:
+            self.controlar_actuador(False)
+
+    def controlar_actuador(self, estado):
+        """Envía la señal de control al hardware."""
+        self.estado_actuador = estado
+        accion = "ENCENDIDO" if estado else "APAGADO"
+        print(f"[OUTPUT] Actuador: {accion}")
+
+    def ejecutar_ciclo(self):
+        """Bucle principal de ejecución del sistema."""
+        try:
+            print("Ejecutando pruebas de integración...")
+            for i in range(5):
+                print(f"\n--- Ciclo de prueba {i+1} ---")
+                dato = self.leer_sensor()
+                self.procesar_logica(dato)
+                time.sleep(1)
+            print("\nPruebas finalizadas con éxito.")
+        except KeyboardInterrupt:
+            print("\nSistema detenido por el usuario.")
+        finally:
+            self.controlar_actuador(False)
+            print("Hardware en estado seguro.")
+
+if __name__ == "__main__":
+    # Instancia del sistema para la Etapa 2
+    mi_sistema = SistemaAutomatizado("Prototipo Etapa 2 - Juan Araujo")
+    mi_sistema.ejecutar_ciclo()
